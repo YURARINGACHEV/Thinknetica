@@ -15,8 +15,8 @@ class Station
   end
 
   # Возрат списка всех поездов
-  def print_train(type_train)
-    @trains.select { |train| train.type_train == type_train }
+  def print_train(type_by_train)
+    @trains.select { |train| train.type_train == type_by_train }
   end
 
   # Отправка поезда
@@ -28,13 +28,14 @@ end
 
 #класс поезд
 class Train
-  attr_reader :number_train, :type_train, :count_wagons, :current_speed, :routes, :start_station
+  attr_reader :number, :type_train, :count_wagons, :current_speed, :routes, :start_station, :get_station, :last_station, :next_station
   #инициализация поезда
-  def initialize(number_train, type_train, count_wagons)
-    @number_train = number_train
+  def initialize(number, type_train, count_wagons)
+    @number = number
     @type_train = type_train
     @count_wagons = count_wagons
     @current_speed = 0
+    @index = 0
   end
 
   #Может набирать скорость
@@ -49,12 +50,12 @@ class Train
 
   #Может возвращать 
   def current_speed
-    puts "Текущая скорость #{@current_speed}"
+    @current_speed
   end
 
   #Может возвращать количество вагонов
   def count_wagons
-    puts "Количество вагонов  #{@count_wagons}"
+    @count_wagons
   end
 
   #Может прицеплять вагоны
@@ -70,19 +71,42 @@ class Train
   #Может принимать маршрут следования маршрута(Route)
   #Автоматически ставится на первую станцию
   def add_route(route)
-    @routes = route.stations
-    @start_station = @routes[0] 
+    @routes = route
+    @start_station = @routes.stations[0] 
+    #@start_station.train_add(self)
   end  
   
-  #Возвращает предыдущую, текущую, следующую станцию
-  def show_stations(route)
-    #???
+
+  #Может перемещаться между станциями на одну вперед
+  def move_station_forward(route)
+    @index += 1
+    @get_station = route.stations[@index]
   end
 
-  #Может перемещаться между станциями
-  def move_station(route)
-    #???
+
+   #Может перемещаться между станциями на одну назад
+  def move_station_back(route)
+    @index -= 1
+    @get_station = route.stations[@index]
   end
+
+    #Возвращает предыдущую
+  def show_stations_last(route)
+    index = route.stations.find_index(@get_station)
+    @last_station = route.stations[index - 1]
+  end
+
+    #Возвращает текущую станцию
+  def show_stations_current(route)
+    @get_station
+  end
+
+    #Возвращает следующую станцию
+  def show_stations_next(route)
+    index = route.stations.find_index(@get_station)
+    @next_station = route.stations[index + 1]
+  end
+
 
 end 
 
