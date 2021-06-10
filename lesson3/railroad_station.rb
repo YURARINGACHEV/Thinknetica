@@ -28,12 +28,13 @@ end
 
 #класс поезд
 class Train
-  attr_reader :number, :type_train, :count_wagons, :current_speed, :routes, :start_station, :get_station, :last_station, :next_station, :current_station 
+  attr_reader :number, :type_train, :count_wagons, :current_speed, :routes, :get_station, :last_station, :next_station, :current_station 
   #инициализация поезда
-  def initialize(number, type_train, count_wagons)
+  def initialize(number, type_train, count_wagons, station)
     @number = number
     @type_train = type_train
     @count_wagons = count_wagons
+    @current_station = station.name
     @current_speed = 0
   end
 
@@ -69,51 +70,56 @@ class Train
   
   #Может принимать маршрут следования маршрута(Route)
   #Автоматически ставится на первую станцию
-  def add_route(route)
-    @routes = route
-    @start_station = route.stations[0]
-  end  
-  
+  def add_route(route, station)
+    @routes = route.stations
+    #@index = route.stations.find_index(station.name)
+    #@current_station = @routes[@index]
+    @current_station = @routes[0]
+  end
 
   #Может перемещаться между станциями на одну вперед
-  def move_station_forward(route)
+  def move_station_forward
+    @index = @routes.find_index(@current_station)
     @index += 1
-    if @index < route.stations.length 
-      @get_station = route.stations[@index]
+    if @index < @routes.length 
+      @current_station = @routes[@index]
      else
-       puts "Вы на конечной станции"
-       @index = route.stations.length - 1
-       @get_station = route.stations[@index]
+       puts "Поезд на конечной станции"
+       @index = @routes.length - 1
+       @current_station = @routes[@index]
      end
   end
 
 
    #Может перемещаться между станциями на одну назад
-  def move_station_back(route)
+  def move_station_back
+    @index = @routes.find_index(@current_station)
     @index -= 1
     if @index >= 0
-      @get_station = route.stations[@index]
+      @current_station = @routes[@index]
      else
-       puts "Вы на первой станции"
+       puts "Поезд на первой станции"
        @index = 0
-       @get_station = route.stations[@index]
+       @current_station = @routes[@index]
      end
   end
 
     #Возвращает предыдущую
-  def show_stations_last(route, station)
-    @last_station = route.stations[@index-1]
-end
+  def show_stations_last
+    @index = @routes.find_index(@current_station)
+    @last_station = @routes[@index-1]
+  end
 
     #Возвращает текущую станцию
-  def show_stations_current(route, station)
-    @index = route.stations.find_index(station.name)
-    @current_station = route.stations[@index]
+  def show_stations_current
+    @index = @routes.find_index(@current_station)
+    @current_station = @routes[@index]
   end
 
     #Возвращает следующую станцию
-  def show_stations_next(route, station)
-    @next_station = route.stations[@index + 1]
+  def show_stations_next
+    @index = @routes.find_index(@current_station)
+    @next_station = @routes[@index + 1]
   end
 
 
