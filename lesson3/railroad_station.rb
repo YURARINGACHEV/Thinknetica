@@ -2,7 +2,7 @@
 
 class Station
     
-  attr_reader :trains, :name
+  attr_reader :name, :trains
   #Название при создании
   def initialize(name)
     @name = name
@@ -11,7 +11,7 @@ class Station
 
   #Добавление поездов
   def train_add(train)
-    @trains << train
+    @trains << train unless trains.include?(train)
   end
 
   # Возрат списка всех поездов
@@ -28,13 +28,12 @@ end
 
 #класс поезд
 class Train
-  attr_reader :number, :type_train, :count_wagons, :current_speed, :routes, :get_station, :last_station, :next_station, :current_station 
+  attr_reader :number, :type_train, :count_wagons, :current_speed, :current_station 
   #инициализация поезда
-  def initialize(number, type_train, count_wagons, station)
+  def initialize(number, type_train, count_wagons)
     @number = number
     @type_train = type_train
     @count_wagons = count_wagons
-    @current_station = station.name
     @current_speed = 0
   end
 
@@ -70,12 +69,12 @@ class Train
   
   #Может принимать маршрут следования маршрута(Route)
   #Автоматически ставится на первую станцию
-  def add_route(route, station)
+  def add_route(route)
     @routes = route.stations
-    #@index = route.stations.find_index(station.name)
-    #@current_station = @routes[@index]
-    @current_station = @routes[0]
+    @current_station = @routes.first
+    @current_station.train_add(self)
   end
+
 
   #Может перемещаться между станциями на одну вперед
   def move_station_forward
@@ -106,20 +105,18 @@ class Train
 
     #Возвращает предыдущую
   def show_stations_last
-    @index = @routes.find_index(@current_station)
-    @last_station = @routes[@index-1]
+    @routes[@routes.find_index(@current_station) - 1]
   end
 
     #Возвращает текущую станцию
-  def show_stations_current
-    @index = @routes.find_index(@current_station)
-    @current_station = @routes[@index]
+  def show_stations_current(route)
+    route.stations.find { |station| station.trains.include?(self) }
+    
   end
 
     #Возвращает следующую станцию
   def show_stations_next
-    @index = @routes.find_index(@current_station)
-    @next_station = @routes[@index + 1]
+    @routes[@routes.find_index(@current_station) + 1]
   end
 
 
@@ -133,18 +130,19 @@ class Route
   attr_reader :stations
 
   # Инициализация нчальной и конечной станции
-  def initialize(start, stop)
-    @stations = [start, stop]
+  def initialize(station_start, station_stop)
+    @stations = [station_start, station_stop]
   end
 
   #добавление промежуточной станции
   def add_station(station)
-    @stations.insert(1, station.name)
+    @stations.insert(1, station) unless stations.include?(station)
 
   end
 
   #Удаление станции
   def del_station(station)
+   
     (station != @stations[0] && station != @stations[-1])? @stations.delete(station) : puts("Такой станции нет")
   end
 
