@@ -1,8 +1,8 @@
 #создать класс Station:
-
 class Station
     
   attr_reader :name, :trains
+
   #Название при создании
   def initialize(name)
     @name = name
@@ -10,7 +10,7 @@ class Station
   end
 
   #Добавление поездов
-  def train_add(train)
+  def add_train(train)
     @trains << train unless trains.include?(train)
   end
 
@@ -26,9 +26,12 @@ class Station
 
 end
 
+
 #класс поезд
 class Train
-  attr_reader :number, :type_train, :count_wagons, :current_speed, :current_station 
+
+  attr_reader :number, :type_train, :count_wagons, :current_speed
+
   #инициализация поезда
   def initialize(number, type_train, count_wagons)
     @number = number
@@ -47,16 +50,6 @@ class Train
     @current_speed -= speed
   end
 
-  #Может возвращать 
-  def current_speed
-    @current_speed
-  end
-
-  #Может возвращать количество вагонов
-  def count_wagons
-    @count_wagons
-  end
-
   #Может прицеплять вагоны
   def add_wagons(wagon)
     @current_speed == 0? @count_wagons += wagon : puts("Остановите поезд. Скорость #{@current_speed}")
@@ -70,62 +63,50 @@ class Train
   #Может принимать маршрут следования маршрута(Route)
   #Автоматически ставится на первую станцию
   def add_route(route)
-    @routes = route.stations
-    @current_station = @routes.first
-    @current_station.train_add(self)
+    @routes = route
+    @routes.stations.first.add_train(self)
   end
-
 
   #Может перемещаться между станциями на одну вперед
   def move_station_forward
-    @index = @routes.find_index(@current_station)
-    @index += 1
-    if @index < @routes.length 
-      @current_station = @routes[@index]
-     else
-       puts "Поезд на конечной станции"
-       @index = @routes.length - 1
-       @current_station = @routes[@index]
-     end
+    return unless station_next
+    destination_station = station_next
+    station_current.send_train(self)
+    destination_station.add_train(self)
   end
-
 
    #Может перемещаться между станциями на одну назад
   def move_station_back
-    @index = @routes.find_index(@current_station)
-    @index -= 1
-    if @index >= 0
-      @current_station = @routes[@index]
-     else
-       puts "Поезд на первой станции"
-       @index = 0
-       @current_station = @routes[@index]
-     end
-  end
-
-    #Возвращает предыдущую
-  def show_stations_last
-    @routes[@routes.find_index(@current_station) - 1]
+    return unless previous_station
+    destination_station = previous_station
+    station_current.send_train(self)
+    destination_station.add_train(self)
   end
 
     #Возвращает текущую станцию
-  def show_stations_current(route)
-    route.stations.find { |station| station.trains.include?(self) }
-    
+  def station_current
+    @routes.stations.find { |station| station.trains.include?(self) }
+  end
+
+  def current_station_index
+    @routes.stations.index(station_current)
   end
 
     #Возвращает следующую станцию
-  def show_stations_next
-    @routes[@routes.find_index(@current_station) + 1]
+  def station_next
+     @routes.stations[current_station_index + 1] if current_station_index < @routes.stations.length
   end
 
+  #Возращает
+  def previous_station
+    @routes.stations[current_station_index - 1] if current_station_index > 0
+  end
 
 end 
 
 
 # Класс маршрут
 class Route
-
   
   attr_reader :stations
 
@@ -142,7 +123,6 @@ class Route
 
   #Удаление станции
   def del_station(station)
-   
     (station != @stations[0] && station != @stations[-1])? @stations.delete(station) : puts("Такой станции нет")
   end
 
