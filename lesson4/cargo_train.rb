@@ -6,7 +6,7 @@ class CargoTrain < Train
 
   
   def initial_type
-    "Cargo"
+    "cargo"
   end
 
   

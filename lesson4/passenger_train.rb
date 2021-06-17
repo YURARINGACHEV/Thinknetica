@@ -5,7 +5,7 @@ class PassengerTrain < Train
 
   
   def initial_type
-    "Passenger"
+    "pass"
   end
 
   

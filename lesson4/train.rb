@@ -33,12 +33,12 @@ class Train
 
   #Может прицеплять вагоны
   def add_wagon(wagon)
-    (self.current_speed.zero? && count_wagons_weight(wagon) < max_weight && type_pass_cargo?(wagon))? self.wagons << wagon : self.wagons
+    (self.current_speed.zero? && count_wagons_weight(wagon) < max_weight && type_pass_cargo?(wagon))? self.wagons << wagon : (puts "Поезд заполнен #{self.wagons}")
   end
 
   #Может отцеплять вагон
   def delete_wagon(wagon)
-    (current_speed.zero? && self.wagons.length > 0 && type_pass_cargo?(wagon))? self.wagons.delete_at(-1) : @wagons = []
+    (current_speed.zero? && self.wagons.length > 0 && type_pass_cargo?(wagon))? self.wagons.delete_at(-1) : (puts "У поезда нет вагонов #{@wagons = []}")
   end
 
   def count_wagons_weight(wagon)
