@@ -3,15 +3,14 @@
 #Подключить модуль к классам Вагон и Поезд
 module CompanyMixin
 
-  def name_companys(namme)
-    self.name_company = namme
-  end
+  # def name_companys(namme)
+  #   self.name_company = namme
+  # end
   
-  def show_campanys
-    puts "Название компании #{self.name_company}"
-  end
+  # def show_campanys
+  #   puts "Название компании #{self.name_company}"
+  # end
 
-  protected
 
   attr_accessor :name_company
 

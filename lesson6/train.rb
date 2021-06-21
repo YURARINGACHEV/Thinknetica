@@ -2,16 +2,6 @@ require_relative 'instas_class_method'
 
 module CompanyMixin
 
-  def name_companys(namme)
-    self.name_company = namme
-  end
-  
-  def show_campanys
-    puts "Название компании #{self.name_company}"
-  end
-
-  protected
-
   attr_accessor :name_company
 
 end
@@ -22,7 +12,7 @@ class Train
 
   include InstanceCounter
   @@instance = 0
-  @@arr_train = {}
+  @@hash_train = {}
 
   include CompanyMixin
 
@@ -35,17 +25,14 @@ class Train
     @current_speed = 0
     @wagons = []
     @max_speed = 0
-    @@arr_train[@number] = self
-    @@instance = register_instance(@@instance)
+    @@hash_train[@number] = self
+    #register_instance
   end
 
-  def class_method_instances
-    self.class.instances(@@instance)
-  end
 
 
   def self.find_train(number)
-    @@arr_train[number]
+    @@hash_train[number]
   end
 
   #Может набирать скорость

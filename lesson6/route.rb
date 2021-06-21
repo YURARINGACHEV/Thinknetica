@@ -1,9 +1,9 @@
 
 require_relative 'instas_class_method'
+
  #Класс маршрут
 class Route
   include InstanceCounter
-  @@instance = 0
     
   attr_accessor :instance
   attr_reader :stations
@@ -11,12 +11,9 @@ class Route
   # Инициализация нчальной и конечной станции
   def initialize(station_start, station_stop)
     @stations = [station_start, station_stop]
-    @@instance = register_instance(@@instance)
+    register_instance
   end
 
-  def class_method_instances
-    self.class.instances(@@instance)
-  end
 
   #добавление промежуточной станции
   def add_station(station)

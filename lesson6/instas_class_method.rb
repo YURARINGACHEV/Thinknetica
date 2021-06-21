@@ -16,27 +16,28 @@
 #счетчик инстансев базового класса.
 
 module InstanceCounter
-
+  
   def self.included(base)
     base.extend ClassMethods
-    base.send :include, InstanceMethods
-  end  
-
-  module ClassMethods
-    def instances(instance)
-      puts "Всего обьектов #{instance}"     
-    end  
-
+    base.include InstanceMethods
   end
 
+  module ClassMethods
+
+    attr_accessor :count_instances
+
+    def instances
+      @count_instances
+    end
+  end
 
   module InstanceMethods
-    attr_reader :instance_count
-    private
-    attr_writer :instance_count
+    
+    protected
 
-    def register_instance(instance)
-      instance += 1   
+    def register_instance
+      self.class.count_instances ||= 0
+      self.class.count_instances += 1
     end
   end
 end
