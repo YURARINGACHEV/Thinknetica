@@ -23,7 +23,7 @@ class Train
   #инициализация поезда
   def initialize(number, type)
     @number = number
-    @type = type.downcase
+    @type = type
     @current_speed = 0
     @wagons = []
     @max_speed = 0
