@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/ClassLength
+
 # frozen_string_literal: true
 
 # rail road
@@ -133,3 +135,4 @@ class RailRoad
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
