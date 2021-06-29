@@ -6,8 +6,6 @@ require_relative 'instas_class_method'
 class Station
   include InstanceCounter
 
-  @@arr_stations = []
-
   attr_reader :trains
   attr_accessor :names
 
@@ -15,15 +13,8 @@ class Station
     @names = names
     validate!
     @trains = []
-    @@arr_stations << self
-    self.class.all_station
+    self.class.add_train_or_staition(self)
     register_instance
-  end
-
-  count_instances
-
-  def self.all_station
-    @@arr_stations
   end
 
   def add_train(train)

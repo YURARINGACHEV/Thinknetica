@@ -65,7 +65,6 @@ class Menu
               4 => -> { @rail_road.show_station },
               5 => -> { @rail_road.show_train } }
     (menus[val] || choice_actions_objects).call
-    puts
     choice_actions_objects
   end
 

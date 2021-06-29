@@ -9,11 +9,16 @@ module InstanceCounter
 
   # show instanse
   module ClassMethods
-    attr_accessor :instances
+    attr_accessor :instances, :hash_train_or_staition
 
     def count_instances
       @instances ||= 0
       @instances
+    end
+
+    def add_train_or_staition(value)
+      @hash_train_or_staition ||= {}
+      @hash_train_or_staition[count_instances + 1] = value
     end
   end
 
@@ -22,7 +27,6 @@ module InstanceCounter
     protected
 
     def register_instance
-      # self.class.count_instances ||= 0
       self.class.instances += 1
     end
   end

@@ -43,9 +43,8 @@ class Route
   protected
 
   def validate!
-    raise "Название не должно быть 'nil'" if stations[0].nil?
-    raise 'Первая станция дожна быть классом Station' unless stations[0].instance_of?(Station)
-    raise 'Конечная станция дожна быть классом Station' unless stations[-1].instance_of?(Station)
-    raise 'Конечная и начальная станции должны отличаться' if stations[0] == stations[-1]
+    raise '1 станция: Station' unless stations[0].instance_of?(Station)
+    raise 'Конечная станция: Station' unless stations[-1].instance_of?(Station)
+    raise 'Конечная не соответствует начальной' if stations[0] == stations[-1]
   end
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+class LongClass
+end
 require_relative 'instas_class_method'
 require_relative 'company_mixin'
 
@@ -7,8 +9,6 @@ require_relative 'company_mixin'
 class Train
   include CompanyMixin
   include InstanceCounter
-  @@instance = 0
-  @@hash_train = {}
 
   NUMBER_FORMAT = /\w{3}-\w{2}/.freeze
 
@@ -21,28 +21,14 @@ class Train
     validate!
     @current_speed = 0
     @wagons = []
-    @max_speed = 0
-    @@instance += 1
-    @@hash_train[@@instance] = self
-    register_instance
-  end
-
-  count_instances
-
-  def self.find_train(number)
-    @@hash_train[number]
   end
 
   def speed_up
-    if_max_speed? ? set_speed : max_speed_train
+    set_speed
   end
 
   def speed_down
     current_speed.zero? ? dischare_speed : speed_zero
-  end
-
-  def if_max_speed?
-    current_speed < max_speed_train
   end
 
   def if_zero_speed?
@@ -51,14 +37,18 @@ class Train
   end
 
   def add_wagon(wagon)
-    (@wagons << wagon unless wagons.include?(wagon)) if if_zero_and_type?(wagon)
+    (@wagons << wagon unless wagons.include?(wagon)) if if_zero_type?(wagon)
   end
 
   def delete_wagon(wagon)
-    if_zero_and_type?(wagon) && wagons.length.positive? ? wagons.delete_at(-1) : @wagons = []
+    if if_zero_type?(wagon) && wagons.length.positive?
+      wagons.delete_at(-1)
+    else
+      @wagons = []
+    end
   end
 
-  def if_zero_and_type?(wagon)
+  def if_zero_type?(wagon)
     if_zero_speed? && type_pass_cargo?(wagon)
   end
 
@@ -136,16 +126,8 @@ class Train
     raise 'Остановите поезд ' unless current_speed.zero?
   end
 
-  def initial_speed
-    100
-  end
-
   def speed_zero
     self.current_speed = 0
-  end
-
-  def max_speed_train!
-    self.max_speed = initial_speed
   end
 
   def set_speed
