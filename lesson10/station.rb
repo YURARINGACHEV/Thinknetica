@@ -9,20 +9,18 @@ class Station
   include Validation
 
   attr_reader :trains
-  attr_accessor :names, :attr_class 
- 
+  attr_accessor :names
+
   NAME_STATION = /^[a-zа-я]/i
 
   validate :names, :presence
   validate :names, :format, NAME_STATION
-  validate :attr_class, :type, "Station"
+  validate :names, :type, String
 
   def initialize(names)
     @names = names
-    
     @trains = []
-    @attr_class = self.class.to_s
-    validate!(self)
+    validate!
     self.class.add_train_or_staition(self)
     register_instance
   end
@@ -38,18 +36,4 @@ class Station
   def send_train(train)
     @trains.delete(train)
   end
-
-  # def valid?
-  #   validate!
-  #   true
-  # rescue StandardError
-  #   false
-  # end
-
-  protected
-
-  # def validate!
-  #   raise "Название не должно быть 'nil'" if names.nil?
-  #   raise 'Название должно быть не менее 5 символов' unless names.length >= 5
-  # end
 end
