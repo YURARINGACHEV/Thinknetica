@@ -9,19 +9,20 @@ class Station
   include Validation
 
   attr_reader :trains
-  attr_accessor :names, :attribute_class 
+  attr_accessor :names, :attr_class 
  
   NAME_STATION = /^[a-zа-я]/i
 
   validate :names, :presence
   validate :names, :format, NAME_STATION
-  validate :names, :type, "Station"
+  validate :attr_class, :type, "Station"
 
   def initialize(names)
     @names = names
-    validate!(self)
+    
     @trains = []
-    @attribute_class = self.class.to_s
+    @attr_class = self.class.to_s
+    validate!(self)
     self.class.add_train_or_staition(self)
     register_instance
   end

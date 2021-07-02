@@ -17,15 +17,16 @@ module Accessors
     end
   end
 
-  def strong_attr_acessor(name_attr,type)
-    name_attr = "@#{name}"
-    define_method(name_attr) {instance_variable_get(name_attr)}
-    define_method("@#{name_attr}=") do |value|
-      if value.is_a?(type)
-        instance_variable_set(name_attr, value)
-      else 
-        raise TypeError
+  def strong_attr_acessor(name_attr,type, attribute_class)
+    #name_attr = "#{name}".to_sym
+    value = attribute_class.instance_variable_get(name_attr)
+    if value.is_a?(type)
+    puts  "#{attribute_class}"
+    define_method("@#{value}=".to_sym) do |val|
+        instance_variable_set(value, val)
       end
+    else
+      raise TypeError
     end
   end
 
@@ -33,31 +34,11 @@ end
 class Test
   extend Accessors
 
+  attr_accessor :b, :attribute_class 
   attr_accessor_with_history :a, :s
-  strong_attr_acessor :b, String
+  #strong_attr_acessor :b, String
   def initialize(b)
     @b = b
+    @attribute_class = self
   end
 end
-
-# class X
-#   def m 
-#     puts "Hello"
-#   end
-  
-#   def method_missing(name, *args)
-#     self.class.send(:define_method, name.to_sym, lambda { |args| puts args.inspect })
-#     puts "This #{name}, with arg #{args}"
-#   end
-# end
-
-# class X
-#   def m 
-#     puts "Hello"
-#   end
-  
-#   def method_missing(name, *args)
-#     puts "This #{name}, with arg #{args}"
-#   end
-# end
-

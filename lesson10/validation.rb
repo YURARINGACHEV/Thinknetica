@@ -9,22 +9,29 @@ module Validation
 
     attr_accessor :validations
 
-	  def validate(name, type_validate, param = '')
+	  def validate(names, type_validate, param = '')
 	  	self.validations ||= []
-      val = { type_validate => { name: name, param: param } }
+      val = { type_validate => { name: names, param: param } }
       validations << val
 	  end  
   end
 
   module InstanceMethods
 
-  	def validate!(station)
+  	def validate!(attribute_class)
   		self.class.validations.each do |val|
         val.each do |type_validate, params|
-          station.send(type_validate, params[:name] , params[:param])
+          puts "#{type_validate}, params #{params}"
+          value = get_instance(params[:name], attribute_class)
+          puts value
+          attribute_class.send(type_validate, value , params[:param])
         end
       end
   	end
+    
+    def get_instance(name, attribute_class)
+      attribute_class.instance_variable_get("@#{name}")
+    end
 
 	  def presence(value, param)
 	  	raise "значение атрибута не должно быть nil и пустой строкой."  if value.nil? || value.empty?
@@ -34,8 +41,8 @@ module Validation
       raise "Значение не соответствует формату" if value !~ format
     end
 
-    def type(value, attribute_class)
-      raise "Объект не соответствует классу" if attribute_class == value
+    def type(value, type_class)
+      raise "Объект не соответствует классу" if value != type_class
     end
   end
 end
