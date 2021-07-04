@@ -11,7 +11,7 @@ class Station
   attr_reader :trains
   attr_accessor :names
 
-  NAME_STATION = /^[a-zа-я]/i
+  NAME_STATION = /^[a-zа-я]/i.freeze
 
   validate :names, :presence
   validate :names, :format, NAME_STATION

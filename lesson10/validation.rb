@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# rubocop:disable Style/Documentation
+
 module Validation
   def self.included(base)
     base.extend ClassMethods
@@ -41,3 +45,4 @@ module Validation
     end
   end
 end
+# rubocop:enable Style/Documentation
